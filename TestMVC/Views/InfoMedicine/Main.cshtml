@@ -1,0 +1,205 @@
+﻿@{
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+
+}
+@model TestMVC.Domain.ViewModels.InfoAndCategoryViewModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <script src="~/Scripts/autocompleteCommon.js"></script>
+    <script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+    <script src="~/Scripts/jquery.autocomplete.min.js"></script>
+    <script src="~/Scripts/otpremuim.js"></script>
+    <link href="~/Css/DivLoading.css" rel="stylesheet" />
+    <link href="~/Content/jquery.ui.autocomplete.css" rel="stylesheet" />
+    <link href="~/Css/bootstrap.min.css" rel="stylesheet" />
+    <style type="text/css">
+
+        #tableSort {
+            moz-user-select: -moz-none;
+            -moz-user-select: none;
+            -o-user-select: none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+            #tableSort th {
+                cursor: pointer;
+                background: #D1282e
+            }
+
+            #tableSort tr:nth-child(even) {
+                background: #f9f9f9
+            }
+
+            #tableSort th, #tableSort td {
+                padding: 10px;
+                border: 1px solid #ccc;
+            }
+    </style>
+
+</head>
+<body>
+    <div class="container" style="height: 1000px">
+        @using (Html.BeginForm("Main", "InfoMedicine", FormMethod.Post))
+        {
+            <div class="row">
+                <div class="col-md-1">Number</div>
+                <div class="col-md-2">
+                    <input type="text" name="ID" />
+                </div>
+                <div class="col-md-1">Category</div>
+                <div class="col-md-2">
+                    <select class="form-control" data-toggle="select" name="category">
+                        <option>--select--</option>
+                        <option>OTC</option>
+                        <option>RX</option>
+                    </select>
+                </div>
+                <div class="col-md-1">Usage</div>
+                <div class="col-md-2">
+                    <select class="form-control select select-default" data-toggle="select" name="Usage">
+                        @if (Model != null && Model.Usage != null)
+                        {
+                            <option value="default" selected="selected">--select--</option>
+                            foreach (SelectListItem item in Model.Usage)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-dark btn-block" type="submit" id="btnSearch">Search</button>
+                </div>
+                <div class="col-md-1">
+                    <a href="@Url.Action("Add","InfoMedicine")" class="btn btn-dark btn-block">Add</a>
+                </div>
+            </div>
+        }
+        <div class="list-box wrapper">
+            <hr style="width: 100%" />
+            <table id="tableSort" class="table table-striped table-bordered table-hover">
+                @{
+                    var list = ViewBag.Medicine as List<TestMVC.Domain.ViewModels.InfoAndCategoryViewModel>;
+                    if (list != null && list.Count > 0)
+                    {
+                        <thead>
+                            <tr style="background-color: #D1282e; color: white">
+                                <th class="td" data-type="string">MedicineNo</th>
+                                <th class="td" data-type="string">Name</th>
+                                <th class="td" data-type="string">Production Plcae</th>
+                                <th class="td" data-type="string">Production Date</th>
+                                <th class="td" data-type="string">Expiration Date</th>
+                                <th class="td" data-type="string">Price</th>
+                                <th class="td" data-type="string">Category</th>
+                                <th class="td" data-type="string">Usage</th>
+                                <th style="width: 200px"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="srcollRefresh">
+                            @{
+                                foreach (var item in list)
+                                {
+                                    <tr>
+                                        <td class="td">@Html.DisplayFor(modelItem => item.ID)</td>
+                                        <td class="td">@Html.DisplayFor(modelItem => item.name)</td>
+                                        <td class="td">@Html.DisplayFor(modelItem => item.origin)</td>
+                                        <td class="td">@Html.DisplayFor(modelItem => item.PD)</td>
+                                        <td class="td">@Html.DisplayFor(modelItem => item.EXP)</td>
+                                        <td class="td">@Html.DisplayFor(modelItem => item.price)</td>
+                                        <td class="td">@Html.DisplayFor(modelItem => item.category)</td>
+                                        <td class="td">@Html.DisplayFor(modelItem => item.usage)</td>
+                                        <td class="td">
+                                            <a href="@Url.Action("Edit","InfoMedicine",new { id = item.ID.Trim()})" class="btn btn-dark" style="margin-left: 10px">Edit</a>
+                                            <a href="javascript:void(0)" onclick="deleteInfoMedicine(@item.ID)" class="btn btn-dark">Delete</a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    }
+                }
+            </table>
+        </div>
+        @{ if (list != null && list.Count > 0)
+            {
+                @Html.Partial("Pager")
+            }
+        }
+    </div>
+    
+</body>
+</html>
+<script>
+   
+    $(function () {
+        
+       
+            var tbody = document.querySelector('#tableSort').tBodies[0];
+            var th = document.querySelector('#tableSort').tHead.rows[0].cells;
+            var td = tbody.rows;
+
+            if (th.length > 0) {
+                for (var i = 0; i < th.length; i++) {
+                    th[i].flag = 1;
+                    th[i].onclick = function () {
+                        sort(this.getAttribute('data-type'), this.flag, this.cellIndex);
+                        this.flag = -this.flag;
+                    };
+                };
+            }
+
+        function sort(str, flag, n) {
+            debugger
+                var arr = [];
+                for (var i = 0; i < td.length; i++) {
+                    arr.push(td[i]);
+                };
+                arr.sort(function (a, b) {
+                        return method(str, a.cells[n].innerHTML, b.cells[n].innerHTML) * flag;
+                    });
+                    for (var i = 0; i < arr.length; i++) {
+                        tbody.appendChild(arr[i]);
+                    };
+                };
+
+                function method(str, a, b) {
+                    switch (str) {
+                        case 'num':
+                            return a - b;
+                            break;
+                        case 'string':
+                            return a.localeCompare(b);
+                            break;
+                        default:
+                            return new Date(a.split('-').join('/')).getTime() - new Date(b.split('-').join('/')).getTime();
+                    };
+                };
+
+            
+    });
+    function deleteInfoMedicine(id) {
+        if (confirm("Are you sure you want to delete it?")) {
+            $.post("@Url.Action("Delete","InfoMedicine")", { ID: id }, function (data) {
+                alert(data.ErrorMessage);
+                location.reload();
+            }, "json")
+        }
+    }
+    
+</script>
+
