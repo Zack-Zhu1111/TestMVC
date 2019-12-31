@@ -1,0 +1,65 @@
+﻿@model TestMVC.Domain.ViewModels.UserLoginViewModel
+@if (ViewBag.power == "Manager")
+{
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+}
+@if (ViewBag.power != "Manager")
+{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/js/jquery-3.4.1.min.js"></script>
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="row form-group">
+            <label class="control-label col-md-2">Old Password</label>
+            <div class="col-md-10">
+                <input id="Oldpwd" type="password" style="width:230px;height:38px" required />
+                <a href="javascript:void(0)" class="btn btn-dark" style="height:36px" onclick="check()">Check</a>
+                <a href="@Url.Action("GoBack","InfoMedicine")" class="btn btn-dark" style="height:36px;margin-left:5px">Back</a>
+            </div>
+        </div>
+
+        <div id="new" class="row form-group" style="display:none">
+            <label class="control-label col-md-2">New Password</label>
+            <div class="col-md-10">
+                <input id="Newpwd" name="Newpwd" type="password" style="width:230px;height:38px" />
+            </div>
+        </div>
+        <div id="Cnew" class="row form-group" style="display:none">
+            <label class="control-label col-md-2">Confirm New Password</label>
+            <div class="col-md-10">
+                <input id="CNewpwd" name="CNewpwd" type="password" style="width:230px;height:38px" />
+            </div>
+        </div>
+
+        <div id="btn" class="row form-group" style="display:none">
+            <button class="btn btn-default col-md-offset-2" type="submit">Update</button>
+        </div>
+    </div>
+}
+@{ string Password = Session["Password"] == null ? string.Empty : Session["Password"].ToString();}
+<script>
+    function check() {
+        var Oldpwd = document.getElementById("Oldpwd").value;
+        var Loginpwd = @Password;
+        if (Oldpwd == Loginpwd) {
+            document.getElementById("new").removeAttribute("style");
+            document.getElementById("Cnew").removeAttribute("style");
+            document.getElementById("btn").style.display = "block";
+            $("#Newpwd").attr("required", true);
+            $("#CNewpwd").attr("required", true);
+            $("#Newpwd").focus();
+        }
+        else {
+            alert("Check failed!");
+            location.reload();
+        }
+    }
+</script>

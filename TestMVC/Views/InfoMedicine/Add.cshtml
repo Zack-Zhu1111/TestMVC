@@ -17,7 +17,7 @@
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="row form-group">
-            <label class="control-label col-md-2">MedicineNo.</label>
+            <label class="control-label col-md-2">MedicineNo</label>
             <div class="col-md-10">
                 @Html.TextBoxFor(model => model.ID, new { @class = "form-control", @style = "width:230px;height:36px", @placeholder = "4-8 digit numbers" })
                 @*<input type="text" id="ID" class="form-control" style="width:230px;height:30px" name="ID" onblur="checkID()" onkeyup="this.value=this.value.replace(/\D/g,'')" required />*@
@@ -42,7 +42,7 @@
             <label class="control-label col-md-2">Production Date</label>
             <div class="col-md-10">
                 <div class="input-group" style="width:270px">
-                    <input type="text" class="form-control" style="width:230px;height: 36px" name="PD" id="d1" onclick="WdatePicker();" placeholder="mm/dd/yyyy" required />
+                    @Html.TextBoxFor(model => model.PD, htmlAttributes: new { id = "d1", @class = "form-control", @style = "width:230px;height:36px", onclick = "WdatePicker();", autocomplete = "off", @placeholder = "mm/dd/yyyy" })
                     <img id="1" style="cursor: pointer; height: 36px; width: 36px" onclick="WdatePicker({el:'d1'})" src="~/images/calendar.png">
                 </div>
                 @Html.ValidationMessageFor(model => model.PD, "", new { @class = "text-danger" })
@@ -51,14 +51,19 @@
         <div class="row form-group">
             <label class="control-label col-md-2">Expiration Date</label>
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.EXP, new { @class = "form-control", @style = "width:230px;height:36px", @placeholder = "eg:12months" })
-                @Html.ValidationMessageFor(model => model.EXP, "", new { @class = "text-danger" })
+                @Html.TextBoxFor(model => model.EXP, new { @class = "form-control", @style = "width:130px;height:36px;float:left", @placeholder = "only integer", @onkeyup = "this.value=this.value.replace(/\\D/g,'')" })
+                <select class="form-control" style="width:100px;height:36px" data-toggle="select" name="date">
+                    <option>days</option>
+                    <option>months</option>
+                    <option>years</option>
+                </select>
+                    @Html.ValidationMessageFor(model => model.EXP, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="row form-group">
             <label class="control-label col-md-2">Price</label>
             <div class="col-md-10">
-                <input type="text" class="form-control" style="width:230px;height:30px" name="price" required />
+                <input type="text" class="form-control" style="width:230px;height:30px" name="price" placeholder="only integer;module:yuan" onkeyup = "this.value=this.value.replace(/\D/g,'')" required />
                 @Html.ValidationMessageFor(model => model.price, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -86,8 +91,8 @@
             </div>
         </div>
         <div class="row form-group">
-            <button class="btn btn-dark offset-md-1" type="submit">Add</button>
-            <a class="btn btn-dark offset-md-1" href="@Url.Action("Main","InfoMedicine")">Back</a>
+            <button class="btn btn-default col-md-offset-2" type="submit">Add</button>
+            <a class="btn btn-default" href="@Url.Action("Main","InfoMedicine")" style="margin-left:5px">Back</a>
         </div>
     </div>
 }

@@ -55,11 +55,15 @@
     <Compile Include="Contexts\InfoMedicineContext.cs" />
     <Compile Include="Contexts\MedicineCategoryContext.cs" />
     <Compile Include="Contexts\MedicineUsageContext.cs" />
+    <Compile Include="Contexts\MedicineOrderContext.cs" />
+    <Compile Include="Contexts\ShoppingCartContext.cs" />
     <Compile Include="Contexts\UserLoginContext.cs" />
     <Compile Include="Models\Information.cs" />
     <Compile Include="Models\InfoMedicine.cs" />
     <Compile Include="Models\MedicineCategory.cs" />
     <Compile Include="Models\MedicineUsage.cs" />
+    <Compile Include="Models\MedicineOrder.cs" />
+    <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Models\UserLogin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\InfoAndCategoryRepository.cs" />

@@ -8,12 +8,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TestMVC.Data.Models
 {
-    [Table("UserLogin")]
-    public class UserLogin
+    
+    [Table("ShoppingCart")]
+    public class ShoppingCart
     {
         [Key]
-        public string UserName { get; set; }
-        public string Password { get; set; }
-        public string Power { get; set; }
+        public string UserId { get; set; }
+        public string ID { get; set; }
+        public string name { get; set; }
+        public string price { get; set; }
+        public int count { get; set; }
     }
 }

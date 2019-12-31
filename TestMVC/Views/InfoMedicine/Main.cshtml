@@ -16,7 +16,6 @@
     <script src="~/Scripts/otpremuim.js"></script>
     <link href="~/Css/DivLoading.css" rel="stylesheet" />
     <link href="~/Content/jquery.ui.autocomplete.css" rel="stylesheet" />
-    <link href="~/Css/bootstrap.min.css" rel="stylesheet" />
     <style type="text/css">
 
         #tableSort {
@@ -59,7 +58,7 @@
             <div class="row">
                 <div class="col-md-1">Number</div>
                 <div class="col-md-2">
-                    <input type="text" name="ID" />
+                    <input type="text" name="ID" style="width:155px;height:34px" />
                 </div>
                 <div class="col-md-1">Category</div>
                 <div class="col-md-2">
@@ -83,10 +82,10 @@
                     </select>
                 </div>
                 <div class="col-md-1">
-                    <button class="btn btn-dark btn-block" type="submit" id="btnSearch">Search</button>
+                    <button class="btn btn-default btn-block" type="submit" id="btnSearch" style="margin:0px;padding:0px;height:34px">Search</button>
                 </div>
                 <div class="col-md-1">
-                    <a href="@Url.Action("Add","InfoMedicine")" class="btn btn-dark btn-block">Add</a>
+                    <a href="@Url.Action("Add","InfoMedicine")" class="btn btn-default btn-block">Add</a>
                 </div>
             </div>
         }
@@ -104,7 +103,7 @@
                                 <th class="td" data-type="string">Production Plcae</th>
                                 <th class="td" data-type="string">Production Date</th>
                                 <th class="td" data-type="string">Expiration Date</th>
-                                <th class="td" data-type="string">Price</th>
+                                <th class="td" data-type="string">Price(Yuan)</th>
                                 <th class="td" data-type="string">Category</th>
                                 <th class="td" data-type="string">Usage</th>
                                 <th style="width: 200px"></th>
@@ -124,8 +123,8 @@
                                         <td class="td">@Html.DisplayFor(modelItem => item.category)</td>
                                         <td class="td">@Html.DisplayFor(modelItem => item.usage)</td>
                                         <td class="td">
-                                            <a href="@Url.Action("Edit","InfoMedicine",new { id = item.ID.Trim()})" class="btn btn-dark" style="margin-left: 10px">Edit</a>
-                                            <a href="javascript:void(0)" onclick="deleteInfoMedicine(@item.ID)" class="btn btn-dark">Delete</a>
+                                            <a href="@Url.Action("Edit","InfoMedicine",new { id = item.ID.Trim()})" class="btn btn-default" style="margin-left: 10px">Edit</a>
+                                            <a href="javascript:void(0)" onclick="deleteInfoMedicine(@item.ID)" class="btn btn-default">Delete</a>
                                         </td>
                                     </tr>
                                 }
@@ -145,13 +144,10 @@
 </body>
 </html>
 <script>
-   
     $(function () {
-        
-       
-            var tbody = document.querySelector('#tableSort').tBodies[0];
-            var th = document.querySelector('#tableSort').tHead.rows[0].cells;
-            var td = tbody.rows;
+        var tbody = document.querySelector('#tableSort').tBodies[0];
+        var th = document.querySelector('#tableSort').tHead.rows[0].cells;
+        var td = tbody.rows;
 
             if (th.length > 0) {
                 for (var i = 0; i < th.length; i++) {
@@ -164,7 +160,6 @@
             }
 
         function sort(str, flag, n) {
-            debugger
                 var arr = [];
                 for (var i = 0; i < td.length; i++) {
                     arr.push(td[i]);
@@ -189,8 +184,6 @@
                             return new Date(a.split('-').join('/')).getTime() - new Date(b.split('-').join('/')).getTime();
                     };
                 };
-
-            
     });
     function deleteInfoMedicine(id) {
         if (confirm("Are you sure you want to delete it?")) {

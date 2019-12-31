@@ -98,7 +98,7 @@ namespace TestMVC.Provider
             }
             catch
             {
-
+                throw;
             }
         }
         public void DeleteInfoMedicine(string id)

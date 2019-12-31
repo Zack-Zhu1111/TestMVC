@@ -1,0 +1,72 @@
+﻿@model TestMVC.Domain.ViewModels.InformationViewModel
+@if(ViewBag.power == "Manager")
+{
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+}
+@if(ViewBag.power != "Manager")
+{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+<div class="form-horizontal">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.number)
+
+    <div class="row form-group">
+        <label class="control-label col-md-2">ID</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.number, new { htmlAttributes = new { @class = "form-control", @style = "width:230px;height:36px", @readonly = "readonly" } })
+            @Html.ValidationMessageFor(model => model.number, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <label class="control-label col-md-2">Name</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control", @style = "width:230px;height:36px" } })
+            @Html.ValidationMessageFor(model => model.name, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <label class="control-label col-md-2">Sex</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.sex, new { htmlAttributes = new { @class = "form-control", @style = "width:230px;height:36px" } })
+            @Html.ValidationMessageFor(model => model.sex, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <label class="control-label col-md-2">Age</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.age, new { htmlAttributes = new { @class = "form-control", @style = "width:230px;height:36px" } })
+            @Html.ValidationMessageFor(model => model.age, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <label class="control-label col-md-2">Height</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.height, new { htmlAttributes = new { @class = "form-control", @style = "width:230px;height:36px" } })
+            @Html.ValidationMessageFor(model => model.height, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <label class="control-label col-md-2">Weight</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.weight, new { htmlAttributes = new { @class = "form-control", @style = "width:230px;height:36px" } })
+            @Html.ValidationMessageFor(model => model.weight, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <input class="btn btn-default col-md-offset-2" type="submit" value="Save" onclick="alert('Update success!')" />
+        <a class="btn btn-default" href="@Url.Action("GoBack", "InfoMedicine")" style="margin-left:5px;">Back</a>
+    </div>
+</div>
+}
+

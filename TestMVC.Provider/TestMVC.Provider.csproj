@@ -52,6 +52,8 @@
     <Compile Include="InformationProvider.cs" />
     <Compile Include="MedicineCategoryProvider.cs" />
     <Compile Include="MedicineUsageProvider.cs" />
+    <Compile Include="MedicineOrderProvider.cs" />
+    <Compile Include="ShoppingCartProvider.cs" />
     <Compile Include="UserLoginProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

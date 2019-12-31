@@ -182,12 +182,14 @@
     <Content Include="Css\bootstrap-reboot.min.css" />
     <Content Include="Css\bootstrap.css" />
     <Content Include="Css\bootstrap.min.css" />
+    <Content Include="Css\bootstrap.min3.3.7.css" />
     <Content Include="Css\DivLoading.css" />
     <Content Include="Css\layui.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="images\1072164.png" />
     <Content Include="images\calendar.gif" />
     <Content Include="images\calendar.png" />
     <Content Include="js\bootstrap-datetimepicker.js" />
@@ -196,8 +198,11 @@
     <Content Include="js\bootstrap.bundle.min.js" />
     <Content Include="js\bootstrap.js" />
     <Content Include="js\bootstrap.min.js" />
+    <Content Include="js\flyto.js" />
     <Content Include="js\jquery-3.4.1.js" />
     <Content Include="js\jquery-3.4.1.min.js" />
+    <Content Include="js\jquery-ui.min.js" />
+    <Content Include="js\jquerysession.js" />
     <Content Include="js\popper.js" />
     <Content Include="js\popper.min.js" />
     <Content Include="Scripts\autocompleteCommon.js" />
@@ -272,6 +277,11 @@
     <Content Include="Views\Shared\_MyLayout.cshtml" />
     <Content Include="Views\InfoMedicine\Pager.cshtml" />
     <Content Include="Views\InfoMedicine\Edit.cshtml" />
+    <Content Include="Views\Account\Modify.cshtml" />
+    <Content Include="Views\Account\Edit.cshtml" />
+    <Content Include="Views\InfoMedicine\UserMain.cshtml" />
+    <Content Include="Views\InfoMedicine\ShoppingCart.cshtml" />
+    <Content Include="Views\InfoMedicine\Order.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

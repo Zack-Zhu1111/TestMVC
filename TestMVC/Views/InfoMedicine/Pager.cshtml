@@ -9,7 +9,23 @@
         routeValues[key] = Request.QueryString[key];
     }
 }
-
+<style>
+    #pagination{
+        margin:0px;
+        padding:0px;
+        list-style:none;
+        display:inline;
+    }
+    #pagination li{
+        width:24px;
+        height:24px;
+        border:1px solid blue;
+        display:inline-block;
+    }
+    #pagination li:hover{
+        background-color:red;
+    }
+</style>
 <div style="text-align:center">
     <ul class="pagination">
         @if (_pager.PageIndex == 1)
@@ -33,7 +49,7 @@
             }
             else if (p == _pager.PageIndex)
             {
-                <li class="active">
+                <li class="active" style="background-color:red">
                     <a href="#">@p</a>
                 </li>
             }

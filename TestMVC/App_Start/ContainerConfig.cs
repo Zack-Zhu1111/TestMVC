@@ -28,6 +28,8 @@ namespace TestMVC.App_Start
             builder.RegisterType<InfoMedicineContext>().As<IInfoMedicineContext>().InstancePerRequest();
             builder.RegisterType<InfoAndCategoryContext>().As<IInfoAndCategoryContext>().InstancePerRequest();
             builder.RegisterType<InformationContext>().As<IInformationContext>().InstancePerRequest();
+            builder.RegisterType<ShoppingCartContext>().As<IShoppingCartContext>().InstancePerRequest();
+            builder.RegisterType<MedicineOrderContext>().As<IMedicineOrderContext>().InstancePerRequest();
 
             //builder.RegisterType<MedicineUsageRepository>().As<IMedicineUsageRepository>().InstancePerRequest();
             //builder.RegisterType<UserLoginRepository>().As<IUserLoginRepository>().InstancePerRequest();
@@ -40,6 +42,8 @@ namespace TestMVC.App_Start
             builder.RegisterType<InfoMedicineProvider>().As<IInfoMedicineProvider>();
             builder.RegisterType<InfoAndCategoryProvider>().As<IInfoAndCategoryProvider>();
             builder.RegisterType<InformationProvider>().As<IInformationProvider>();
+            builder.RegisterType<ShoppingCartProvider>().As<IShoppingCartProvider>();
+            builder.RegisterType<MedicineOrderProvider>().As<IMedicineOrderProvider>();
 
             builder.Register(x => LogManager.GetCurrentClassLogger()).As<ILogger>();
             builder.RegisterControllers(Assembly.GetExecutingAssembly());

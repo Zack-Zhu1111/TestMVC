@@ -8,6 +8,7 @@ using TestMVC.Provider;
 using TestMVC.Core;
 using TestMVC.Data.Contexts;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace TestMVC.Controllers
 {
@@ -24,21 +25,37 @@ namespace TestMVC.Controllers
             }
             set { Session["InfoMedicineList"] = value; }
         }
+        protected List<ShoppingCartViewModel> ShoppingList
+        {
+            get
+            {
+                if (Session["ShoppingList"] == null)
+                { return null; }
+                else
+                { return Session["ShoppingList"] as List<ShoppingCartViewModel>; }
+            }
+            set { Session["ShoppingList"] = value; }
+        }
         private readonly IMedicineUsageProvider _medicineusageprovider;
         private readonly IInfoMedicineProvider _infoMedicineProvider;
         private readonly IMedicineCategoryProvider _medicineCategoryProvider;
         private readonly IInfoAndCategoryProvider _infoAndCategoryProvider;
-        public InfoMedicineController(IMedicineUsageProvider medicineusageprovider, IInfoMedicineProvider infoMedicineProvider, IMedicineCategoryProvider medicineCategoryProvider, IInfoAndCategoryProvider infoAndCategoryProvider)
+        private readonly IShoppingCartProvider _shoppingCartProvider;
+        private readonly IMedicineOrderProvider _medicineOrderProvider;
+        public InfoMedicineController(IMedicineUsageProvider medicineusageprovider, IInfoMedicineProvider infoMedicineProvider, IMedicineCategoryProvider medicineCategoryProvider,
+            IInfoAndCategoryProvider infoAndCategoryProvider, IShoppingCartProvider shoppingCartProvider, IMedicineOrderProvider medicineOrderProvider)
         {
             _medicineusageprovider = medicineusageprovider;
             _infoMedicineProvider = infoMedicineProvider;
             _medicineCategoryProvider = medicineCategoryProvider;
             _infoAndCategoryProvider = infoAndCategoryProvider;
-    }
+            _shoppingCartProvider = shoppingCartProvider;
+            _medicineOrderProvider = medicineOrderProvider;
+        }
         public ActionResult Main()
         {
-            Session["status"] = "Information";
-            if(Session["LoginUserName"] == null)
+            Session["status"] = "Medicine Information";
+            if (Session["LoginUserName"] == null)
             {
                 return RedirectToAction("Login", "Account");
             }
@@ -49,14 +66,14 @@ namespace TestMVC.Controllers
                 Search();
                 return View(viewModel);
             }
-            
+
         }
         public ActionResult Add()
         {
             //var viewModel = new InfoMedicineAdd();
             //viewModel.Usage = GetUsageListItemAsync();
             //return View(viewModel);
-            Session["status"] = "Add Information";
+            Session["status"] = "Add Medicine Information";
             if (Session["LoginUserName"] == null)
             {
                 return RedirectToAction("Login", "Account");
@@ -83,11 +100,11 @@ namespace TestMVC.Controllers
                 string name = Request.Form.Get("name");
                 string origin = Request.Form.Get("origin");
                 string PD = Request.Form.Get("PD");
-                string EXP = Request.Form.Get("EXP");
+                string EXP = Request.Form.Get("EXP") + Request.Form.Get("date");
                 string price = Request.Form.Get("price");
                 string category = Request.Form.Get("category");
                 string usage = Request.Form.Get("Usage");
-                _infoMedicineProvider.EditInfoMedicine(ID,name,origin,PD,EXP,price);
+                _infoMedicineProvider.EditInfoMedicine(ID, name, origin, PD, EXP, price);
                 _medicineCategoryProvider.EditCategory(ID, category, usage);
                 return Content("<script>alert('Add Success!');window.location.href='Main';</script>");
             }
@@ -112,10 +129,7 @@ namespace TestMVC.Controllers
         [HttpPost]
         public ActionResult Search()
         {
-            
             var Model = new List<InfoAndCategoryViewModel>();
-
-           
             List<InfoAndCategoryViewModel> Infolist = new List<InfoAndCategoryViewModel>();
             string Id = null;
             string Category = null;
@@ -168,6 +182,8 @@ namespace TestMVC.Controllers
                     Model.Add(List);
                 }
                 ViewBag.length = Infolist.Count;
+                System.Web.HttpContext.Current.Session["Category"] = null;
+                System.Web.HttpContext.Current.Session["Usage"] = null;
             }
             else if (Id == null && Category == null && Usage != null)
             {
@@ -186,6 +202,8 @@ namespace TestMVC.Controllers
                     Model.Add(List);
                 }
                 ViewBag.length = Infolist.Count;
+                System.Web.HttpContext.Current.Session["Category"] = null;
+                System.Web.HttpContext.Current.Session["Usage"] = Usage;
             }
             else if (Id == null && Category != null && Usage == null)
             {
@@ -203,6 +221,8 @@ namespace TestMVC.Controllers
                     List.usage = Infolist[i].usage;
                     Model.Add(List);
                 }
+                System.Web.HttpContext.Current.Session["Category"] = Category;
+                System.Web.HttpContext.Current.Session["Usage"] = null;
             }
             else if (Id == null && Category != null && Usage != null)
             {
@@ -220,6 +240,8 @@ namespace TestMVC.Controllers
                     List.usage = Infolist[i].usage;
                     Model.Add(List);
                 }
+                System.Web.HttpContext.Current.Session["Category"] = Category;
+                System.Web.HttpContext.Current.Session["Usage"] = Usage;
             }
             else if (Id != null)
             {
@@ -238,8 +260,8 @@ namespace TestMVC.Controllers
                     Model.Add(List);
                 }
             }
-            
-           
+
+
             InfoMedicineList = Model;
             int pageindex = 1;
             var recordCount = InfoMedicineList.Count();
@@ -266,38 +288,57 @@ namespace TestMVC.Controllers
             SelectList Category = new SelectList(items, "Value", "Text");
             return Category;
         }
+        public static SelectList GetDate()
+        {
+            List<SelectListItem> items = new List<SelectListItem>()
+            {
+                new SelectListItem() { Text = "days", Value = "days"},
+                new SelectListItem() { Text = "months", Value = "months"},
+                new SelectListItem() { Text = "years", Value = "years"}
+            };
+            SelectList Date = new SelectList(items, "Value", "Text");
+            return Date;
+        }
 
         public ActionResult Edit(string id)
         {
-            Session["status"] = "Edit Information";
+            Session["status"] = "Edit Medicine Information";
             try
             {
                 if (Session["LoginUserName"] == null)
                 {
                     return RedirectToAction("Login", "Account");
                 }
-                
-                    var Model = new MedicineInfoAndCategoryViewModel();
-                    var SearchInfo = _infoMedicineProvider.GetInfoMedicineById(id);
 
-                    Model.Usage = GetUsageListItemAsync();
+                var Model = new MedicineInfoAndCategoryViewModel();
+                var SearchInfo = _infoMedicineProvider.GetInfoMedicineById(id);
 
-                    Model.ID = SearchInfo[0].ID;
-                    Model.name = SearchInfo[0].name;
-                    Model.origin = SearchInfo[0].origin;
-                    Model.PD = SearchInfo[0].PD;
-                    Model.EXP = SearchInfo[0].EXP;
-                    Model.price = SearchInfo[0].price;
-                   
-                    var SearchCategory = _medicineCategoryProvider.GetCategoryByID(id);
+                Model.Usage = GetUsageListItemAsync();
 
-                    Model.category = SearchCategory[0].category;
-                    Model.usage = SearchCategory[0].usage;
-                    
-                    ViewData["Category"] = GetCategory();
-                    return View(Model);
-                
-            
+                Model.ID = SearchInfo[0].ID;
+                Model.name = SearchInfo[0].name;
+                Model.origin = SearchInfo[0].origin;
+                Model.PD = SearchInfo[0].PD;
+                string a = "[0-9]+";
+                Regex regex = new Regex(a);
+                Match match = regex.Match(SearchInfo[0].EXP);
+                Model.EXP = match.ToString();
+                string b = "[a-z]+";
+                Regex Regex = new Regex(b);
+                Match Match = Regex.Match(SearchInfo[0].EXP);
+                Model.date = Match.ToString();
+                Model.price = SearchInfo[0].price;
+
+                var SearchCategory = _medicineCategoryProvider.GetCategoryByID(id);
+
+                Model.category = SearchCategory[0].category;
+                Model.usage = SearchCategory[0].usage;
+
+                ViewData["Category"] = GetCategory();
+                ViewData["Date"] = GetDate();
+                return View(Model);
+
+
             }
             catch
             {
@@ -314,7 +355,7 @@ namespace TestMVC.Controllers
             var name = Request.Form.Get("name");
             var origin = Request.Form.Get("origin");
             var PD = Request.Form.Get("PD");
-            var EXP = Request.Form.Get("EXP");
+            var EXP = Request.Form.Get("EXP") + Request.Form.Get("date");
             var price = Request.Form.Get("price");
             var category = Request.Form.Get("category");
             var usage = Request.Form.Get("usage");
@@ -332,6 +373,179 @@ namespace TestMVC.Controllers
             result.ErrorMessage = "Delete Success!";
             return Json(result);
         }
-       
+
+        public ActionResult UserMain()
+        {
+            Session["status"] = "Medicine Information";
+            if (Session["LoginUserName"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+                var viewModel = new InfoAndCategoryViewModel();
+                viewModel.Usage = GetUsageListItemAsync();
+                Search();
+                return View(viewModel);
+            }
+        }
+
+        public ActionResult Buy(string id)
+        {
+            var model = _infoMedicineProvider.GetInfoMedicineById(id);
+            var IdIsExist = _shoppingCartProvider.GetById(id);
+            if (IdIsExist == null)
+            {
+                var userid = Session["LoginId"].ToString();
+                var ID = model[0].ID;
+                var name = model[0].name;
+                var price = model[0].price;
+                var count = 1;
+                _shoppingCartProvider.InsertShopping(userid, ID, name, price, count);
+            }
+            else
+            {
+                var userid = Session["LoginId"].ToString();
+                var ID = model[0].ID;
+                var name = model[0].name;
+                var Price = Convert.ToInt32(IdIsExist[0].price) + Convert.ToInt32(model[0].price);
+                var count = IdIsExist[0].count + 1;
+                string price = Convert.ToString(Price);
+                _shoppingCartProvider.InsertShopping(userid, ID, name, price, count);
+            }
+            var result = new InfoMedicineDeleteViewModel();
+            result.ErrorMessage = "The medicine has been added in the cart!";
+            return Json(result);
+        }
+        public ActionResult ShoppingCart()
+        {
+            Session["status"] = "Shopping Cart";
+            if (Session["LoginUserName"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            var viewModel = new List<ShoppingCartViewModel>();
+            var userid = Session["LoginId"].ToString();
+            var model = _shoppingCartProvider.GetByUserId(userid);
+            int total = 0;
+            if (model != null)
+            {
+                for (int i = 0; i < model.Count; i++)
+                {
+                    ShoppingCartViewModel list = new ShoppingCartViewModel();
+                    list.ID = model[i].ID;
+                    list.name = model[i].name;
+                    list.price = model[i].price;
+                    list.count = model[i].count;
+                    viewModel.Add(list);
+                    total = total + Convert.ToInt32(list.price);
+                }
+            }
+            ViewBag.total = total;
+            ShoppingList = viewModel;
+            ViewBag.ShoppingCart = ShoppingList.OrderBy(c => c.ID).ToList();
+            return View(viewModel);
+        }
+        public ActionResult AddCount(string id)
+        {
+            var model = _shoppingCartProvider.GetById(id);
+            string userid = model[0].UserId;
+            string name = model[0].name;
+            int Count = model[0].count + 1;
+            int Price = Convert.ToInt32(model[0].price) * Count / model[0].count;
+            string price = Price.ToString();
+            _shoppingCartProvider.InsertShopping(userid, id, name, price, Count);
+            return RedirectToAction("ShoppingCart", "InfoMedicine");
+        }
+        public ActionResult ReduceCount(string id)
+        {
+            var model = _shoppingCartProvider.GetById(id);
+            string userid = model[0].UserId;
+            string name = model[0].name;
+            if (model[0].count >= 2)
+            {
+                int Count = model[0].count - 1;
+                int Price = Convert.ToInt32(model[0].price) * Count / model[0].count;
+                string price = Price.ToString();
+                _shoppingCartProvider.InsertShopping(userid, id, name, price, Count);
+                return RedirectToAction("ShoppingCart", "InfoMedicine");
+            }
+            else
+            {
+                return RedirectToAction("ShoppingCart", "InfoMedicine");
+            }
+        }
+        public ActionResult DeleteShopping(string id)
+        {
+            //var model = _shoppingCartProvider.GetById(id);
+            _shoppingCartProvider.DeleteShopping(id);
+            return RedirectToAction("ShoppingCart", "InfoMedicine");
+        }
+        public ActionResult GoBack()
+        {
+            if (Session["Power"].ToString() == "Manager")
+            {
+                return RedirectToAction("Main", "InfoMedicine");
+            }
+            else
+            {
+                return RedirectToAction("UserMain", "InfoMedicine");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult BuyShopping()
+        {
+            var Name = Request.Form.Get("name");
+            if (Name == "")
+                Name = null;
+            var Address = Request.Form.Get("address");
+            if (Address == "")
+                Address = null;
+            if (Name != null && Address != null)
+            {
+                var userid = Session["LoginId"].ToString();
+                var model = _shoppingCartProvider.GetByUserId(userid);
+                for(int i = 0; i < model.Count; i++)
+                {
+                    string time = DateTime.Now.ToString();
+                    string id = model[i].ID;
+                    string name = model[i].name;
+                    int count = model[i].count;
+                    _medicineOrderProvider.InsertOrder(time, id, name, count, userid);
+                }
+                _shoppingCartProvider.DeleteUser(userid);
+                return Content("<script>alert('buy Success!');window.location.href='UserMain';</script>");
+            }
+            else
+            {
+                return Content("<script>alert('Please fill out your name and address');history.go(-1);</script>");
+            }
+        }
+        public ActionResult Order()
+        {
+            Session["status"] = "Order";
+            if (Session["LoginUserName"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            var userid = Session["LoginId"].ToString();
+            var model = _medicineOrderProvider.GetOrder(userid);
+            var viewModel = new List<MedicineOrderViewModel>();
+            ViewBag.Order = model.OrderByDescending(c => c.time).ToList();
+            return View(model);
+        }
+        public ActionResult DeleteOrder(string time)
+        {
+            string userid = Session["LoginId"].ToString();
+            _medicineOrderProvider.DeleteOrder(time,userid);
+            return RedirectToAction("Order", "InfoMedicine");
+        }
+        public ActionResult DeleteAll()
+        {
+            string userid = Session["LoginId"].ToString();
+            _medicineOrderProvider.DeleteAll(userid);
+            return RedirectToAction("Order", "InfoMedicine");
+        }
     }
 }

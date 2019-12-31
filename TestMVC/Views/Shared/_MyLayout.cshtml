@@ -4,7 +4,7 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
-    <link href="~/Css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Css/bootstrap.min3.3.7.css" rel="stylesheet" />
     <script src="~/js/popper.js"></script>
     <script src="~/js/jquery-3.4.1.min.js"></script>
     <script src="~/js/bootstrap.min.js"></script>
@@ -22,10 +22,10 @@
     @{ string loginUserDisplayName = Session["LoginUserName"] == null ? string.Empty : Session["LoginUserName"].ToString();}
     @{ string Year = Session["Year"] == null ? string.Empty : Session["Year"].ToString();}
     @{ string Status = Session["status"] == null ? string.Empty : Session["status"].ToString();}
-    <nav class="navbar navbar-dark bg-dark navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div>
             <div class="navbar-header">
-                <span><a class="navbar-brand">Medicine Manager</a></span>
+                <span><a class="navbar-brand" style="color:white">Medicine Manager</a></span>
             </div>
         </div>
         <div class="dropdown pull-right">
@@ -34,14 +34,16 @@
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+                <li><a class="btn" href="@Url.Action("Edit","Account")" role="menuitem">PersonalInfo</a></li>
+                <li><a class="btn" href="@Url.Action("Modify","Account")" role="menuitem">Modify password</a></li>
                 <li><a class="btn" href="@Url.Action("Login","Account")" role="menuitem">Quit</a></li>
             </ul>
         </div>
     </nav>
-    <div style="margin-top: 50px;height: 50px">
+    <div style="margin-top: 100px;height: 50px">
     <ul style="list-style: none; margin-left: -20px">
         <li>
-            <label><b>@Status</b></label>
+            <h3><label>@Status</label></h3>
         </li>
     </ul>
     </div>

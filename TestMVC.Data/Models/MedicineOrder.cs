@@ -8,12 +8,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TestMVC.Data.Models
 {
-    [Table("UserLogin")]
-    public class UserLogin
+    [Table("MedicineOrder")]
+    public class MedicineOrder
     {
         [Key]
-        public string UserName { get; set; }
-        public string Password { get; set; }
-        public string Power { get; set; }
+        public string time { get; set; }
+        public string id { get; set; }
+        public string name { get; set; }
+        public int count { get; set; }
+        public string userid { get; set; }
     }
 }

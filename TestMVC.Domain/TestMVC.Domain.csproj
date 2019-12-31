@@ -55,6 +55,8 @@
     <Compile Include="ViewModels\MedicineCategoryViewModel.cs" />
     <Compile Include="ViewModels\MedicineInfoAndCategoryViewModel.cs" />
     <Compile Include="ViewModels\MedicineUsageViewModel.cs" />
+    <Compile Include="ViewModels\MedicineOrderViewModel.cs" />
+    <Compile Include="ViewModels\ShoppingCartViewModel.cs" />
     <Compile Include="ViewModels\UserLoginViewModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -14,6 +14,7 @@ namespace TestMVC.Provider
     {
         Task<List<InformationViewModel>> GetAllUserList();
         Task<InformationViewModel> GetUser(string id);
+        void UpdateInfo(string id, string name, string sex, string age, string height, string weight);
     }
     public class InformationProvider : IInformationProvider
     {
@@ -48,6 +49,30 @@ namespace TestMVC.Provider
             catch
             {
                 return new InformationViewModel();
+            }
+        }
+        public void UpdateInfo(string id, string name, string sex, string age, string height, string weight)
+        {
+            var storedProcedureName = "dbo.up_Common_Information_InsertXXX";
+            try
+            {
+                SqlParameter p1 = new SqlParameter("@Number", System.Data.SqlDbType.VarChar);
+                p1.Value = id;
+                SqlParameter p2 = new SqlParameter("@Name", System.Data.SqlDbType.VarChar);
+                p2.Value = name;
+                SqlParameter p3 = new SqlParameter("@Sex", System.Data.SqlDbType.VarChar);
+                p3.Value = sex;
+                SqlParameter p4 = new SqlParameter("@Age", System.Data.SqlDbType.VarChar);
+                p4.Value = age;
+                SqlParameter p5 = new SqlParameter("@Height", System.Data.SqlDbType.VarChar);
+                p5.Value = height;
+                SqlParameter p6 = new SqlParameter("@Weight", System.Data.SqlDbType.VarChar);
+                p6.Value = weight;
+                _dbContext.Database.ExecuteSqlCommand($"{storedProcedureName} @Number,@Name,@Sex,@Age,@Height,@Weight", p1, p2, p3, p4, p5, p6);
+            }
+            catch
+            {
+                Console.Write("<script>alert('Update failed');history.go(-1);</script>");
             }
         }
     }

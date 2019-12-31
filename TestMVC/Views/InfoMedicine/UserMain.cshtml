@@ -1,0 +1,145 @@
+﻿@model TestMVC.Domain.ViewModels.InfoAndCategoryViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/js/jquery-3.4.1.js"></script>
+<script src="~/js/jquery-ui.min.js"></script>
+<script src="~/js/flyto.js"></script>
+
+<style type="text/css">
+
+    #tableSort {
+        moz-user-select: -moz-none;
+        -moz-user-select: none;
+        -o-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        border-collapse: collapse;
+        border-spacing: 0;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        text-align: center;
+        margin: 15px 0;
+    }
+
+        #tableSort th {
+            cursor: pointer;
+            background: #D1282e
+        }
+
+        #tableSort tr:nth-child(even) {
+            background: #f9f9f9
+        }
+
+        #tableSort th, #tableSort td {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+</style>
+
+<div class="container" style="height: 1000px">
+    @using (Html.BeginForm("UserMain", "InfoMedicine", FormMethod.Post))
+    {
+        <div class="row">
+            <div class="col-md-1">Number</div>
+            <div class="col-md-2">
+                <input type="text" name="ID" style="width:155px;height:34px" />
+            </div>
+            <div class="col-md-1">Category</div>
+            <div class="col-md-2">
+                <select class="form-control" data-toggle="select" name="category">
+                    <option>--select--</option>
+                    <option>OTC</option>
+                    <option>RX</option>
+                </select>
+            </div>
+            <div class="col-md-1">Usage</div>
+            <div class="col-md-2">
+                <select class="form-control select select-default" data-toggle="select" name="Usage">
+                    @if (Model != null && Model.Usage != null)
+                    {
+                        <option value="default" selected="selected">--select--</option>
+                        foreach (SelectListItem item in Model.Usage)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-dark btn-block" type="submit" id="btnSearch" style="margin:0px;padding:0px;height:38px">Search</button>
+            </div>
+        </div>
+    }
+    <div class="list-box wrapper">
+        <hr style="width: 100%" />
+        <section class="item">
+            <table id="tableSort" class="table table-striped table-bordered table-hover">
+                @{
+                    var list = ViewBag.Medicine as List<TestMVC.Domain.ViewModels.InfoAndCategoryViewModel>;
+                    if (list != null && list.Count > 0)
+                    {
+                        <thead>
+                            <tr style="background-color: #D1282e; color: white">
+                                <th class="td" data-type="string">MedicineNo</th>
+                                <th class="td" data-type="string">Name</th>
+                                <th class="td" data-type="string">Production Plcae</th>
+                                <th class="td" data-type="string">Production Date</th>
+                                <th class="td" data-type="string">Expiration Date</th>
+                                <th class="td" data-type="string">Price(Yuan)</th>
+                                <th class="td" data-type="string">Category</th>
+                                <th class="td" data-type="string">Usage</th>
+                                <th style="width: 100px"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="srcollRefresh">
+                            @{
+                                foreach (var item in list)
+                                {
+                                    <tr>
+                                        <td class="td">@Html.DisplayFor(modelItem => item.ID)</td>
+                                        <td class="td">@Html.DisplayFor(modelItem => item.name)</td>
+                                        <td class="td">@Html.DisplayFor(modelItem => item.origin)</td>
+                                        <td class="td">@Html.DisplayFor(modelItem => item.PD)</td>
+                                        <td class="td">@Html.DisplayFor(modelItem => item.EXP)</td>
+                                        <td class="td">@Html.DisplayFor(modelItem => item.price)</td>
+                                        <td class="td">@Html.DisplayFor(modelItem => item.category)</td>
+                                        <td class="td">@Html.DisplayFor(modelItem => item.usage)</td>
+                                        <td class="td">
+                                            <button type="button" onclick="Buy(@item.ID)" id="shop" class="btn btn-dark">Buy</button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    }
+                }
+            </table>
+        </section>
+    </div>
+    @{ if (list != null && list.Count > 0)
+        {
+            @Html.Partial("Pager")
+        }
+    }
+</div>
+<script>
+    //function buy(){
+    //    debugger
+    //    $('.srcollRefresh').flyto({
+    //        item: 'tr',
+    //        target: '.glyphicon-shopping-cart',
+    //        button: '.shop'
+    //    });
+    //})
+    function Buy(id) {
+        $.post("@Url.Action("Buy","InfoMedicine")", { ID: id }, function (data) {
+            alert(data.ErrorMessage);
+            location.reload()
+        },"json")
+    }
+    
+</script>
