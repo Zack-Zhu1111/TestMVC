@@ -19,8 +19,7 @@
         <div class="row form-group">
             <label class="control-label col-md-2">MedicineNo</label>
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.ID, new { @class = "form-control", @style = "width:230px;height:36px", @placeholder = "4-8 digit numbers" })
-                @*<input type="text" id="ID" class="form-control" style="width:230px;height:30px" name="ID" onblur="checkID()" onkeyup="this.value=this.value.replace(/\D/g,'')" required />*@
+                @Html.TextBoxFor(model => model.ID, new { @class = "form-control", @style = "width:230px;height:36px", @placeholder = "4-8 digit numbers", @onkeyup = "this.value=this.value.replace(/\\D/g,'')" })
                 @Html.ValidationMessageFor(model => model.ID, "", new { @class = "text-danger" })
             </div>
         </div>

@@ -8,6 +8,7 @@ using TestMVC.Provider;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using TestMVC.Domain.ViewModels;
+using System.Text.RegularExpressions;
 
 namespace TestMVC.Controllers
 {
@@ -116,6 +117,16 @@ namespace TestMVC.Controllers
                 return Content("<script>alert('Update failed');history.go(-1);</script>");
             }
         }
+        public static SelectList GetSex()
+        {
+            List<SelectListItem> items = new List<SelectListItem>()
+            {
+                new SelectListItem() { Text = "Man", Value = "Man"},
+                new SelectListItem() { Text = "Woman", Value = "Woman"},
+            };
+            SelectList Sex = new SelectList(items, "Value", "Text");
+            return Sex;
+        }
         public async Task<ActionResult> Edit()
         {
             if (Session["LoginUserName"] == null)
@@ -124,10 +135,21 @@ namespace TestMVC.Controllers
             }
             Session["status"] = "Edit Personal Information";
             ViewBag.power = Session["Power"].ToString();
-            InformationViewModel model = new InformationViewModel();
+            InformationViewModel ViewModel = new InformationViewModel();
             var id = Session["LoginId"].ToString();
-            model = await _informationProvider.GetUser(id);
-            return View(model);
+            var model = await _informationProvider.GetUser(id);
+            ViewModel.number = model.number;
+            ViewModel.name = model.name;
+            ViewModel.sex = model.sex;
+            ViewModel.age = model.age;
+            string a = "[0-9]+";
+            Regex regex = new Regex(a);
+            Match match = regex.Match(model.height);
+            Match Match = regex.Match(model.weight);
+            ViewModel.height = match.ToString();
+            ViewModel.weight = Match.ToString();
+            ViewData["Sex"] = GetSex();
+            return View(ViewModel);
         }
 
         [HttpPost]
@@ -138,8 +160,8 @@ namespace TestMVC.Controllers
             string name = Model.name;
             string sex = Model.sex;
             string age = Model.age;
-            string height = Model.height;
-            string weight = Model.weight;
+            string height = Model.height + "cm";
+            string weight = Model.weight + "kg";
             _informationProvider.UpdateInfo(id,name,sex,age,height,weight);
             if (Session["Power"].ToString() == "Manager")
             {
