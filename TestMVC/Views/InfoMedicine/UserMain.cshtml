@@ -27,7 +27,8 @@
 
         #tableSort th {
             cursor: pointer;
-            background: #D1282e
+            background: #D1282e;
+            text-align:center;
         }
 
         #tableSort tr:nth-child(even) {
@@ -50,7 +51,7 @@
             </div>
             <div class="col-md-1">Category</div>
             <div class="col-md-2">
-                <select class="form-control" data-toggle="select" name="category">
+                <select class="form-control" data-toggle="select" name="category" style="width:155px;height:34px">
                     <option>--select--</option>
                     <option>OTC</option>
                     <option>RX</option>
@@ -58,7 +59,7 @@
             </div>
             <div class="col-md-1">Usage</div>
             <div class="col-md-2">
-                <select class="form-control select select-default" data-toggle="select" name="Usage">
+                <select class="form-control select select-default" data-toggle="select" name="Usage" style="width:155px;height:34px">
                     @if (Model != null && Model.Usage != null)
                     {
                         <option value="default" selected="selected">--select--</option>
@@ -70,7 +71,7 @@
                 </select>
             </div>
             <div class="col-md-1">
-                <button class="btn btn-dark btn-block" type="submit" id="btnSearch" style="margin:0px;padding:0px;height:38px">Search</button>
+                <button class="btn btn-dark btn-block" type="submit" id="btnSearch" style="margin:0px;padding:0px;height:34px;width:50.83px">Search</button>
             </div>
         </div>
     }
@@ -141,5 +142,4 @@
             location.reload()
         },"json")
     }
-    
 </script>

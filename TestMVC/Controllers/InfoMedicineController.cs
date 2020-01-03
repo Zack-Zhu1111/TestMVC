@@ -100,6 +100,10 @@ namespace TestMVC.Controllers
                 string name = Request.Form.Get("name");
                 string origin = Request.Form.Get("origin");
                 string PD = Request.Form.Get("PD");
+                if (Convert.ToDateTime(PD) > DateTime.Now.AddDays(-1))
+                {
+                    return Content("<script>alert('Production date must be smaller than or equal to today.');history.go(-1);</script>");
+                }
                 string EXP = Request.Form.Get("EXP") + Request.Form.Get("date");
                 string price = Request.Form.Get("price");
                 string category = Request.Form.Get("category");
@@ -355,6 +359,10 @@ namespace TestMVC.Controllers
             var name = Request.Form.Get("name");
             var origin = Request.Form.Get("origin");
             var PD = Request.Form.Get("PD");
+            if (Convert.ToDateTime(PD) > DateTime.Now.AddDays(-1))
+            {
+                return Content("<script>alert('Production date must be smaller than or equal to today.');history.go(-1);</script>");
+            }
             var EXP = Request.Form.Get("EXP") + Request.Form.Get("date");
             var price = Request.Form.Get("price");
             var category = Request.Form.Get("category");

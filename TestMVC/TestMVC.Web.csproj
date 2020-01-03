@@ -192,6 +192,7 @@
     <Content Include="images\1072164.png" />
     <Content Include="images\calendar.gif" />
     <Content Include="images\calendar.png" />
+    <Content Include="images\tooopen_22052747.jpg" />
     <Content Include="js\bootstrap-datetimepicker.js" />
     <Content Include="js\bootstrap-datetimepicker.min.js" />
     <Content Include="js\bootstrap.bundle.js" />
