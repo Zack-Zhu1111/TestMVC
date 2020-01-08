@@ -15,7 +15,7 @@ namespace TestMVC
 
             routes.MapRoute(
                 name: "Default",
-                url: "{controller}/{action}/{id}",
+                url: "{controller}/{action}",
                 defaults: new { controller = "InfoMedicine", action = "Main", id = UrlParameter.Optional }
             );
         }

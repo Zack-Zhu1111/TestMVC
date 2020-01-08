@@ -24,19 +24,19 @@ namespace TestMVC.Controllers
         }
 
         [HttpGet]
-        [Route("GetAllUser/{LoginID:int}")]
-        public async Task<List<InformationViewModel>> GetAllUser(int LoginID)
+        [Route("GetAllUser")]
+        public async Task<List<InformationViewModel>> GetAllUser()
         {
-            if(LoginID == 20162068)
-            {
+            //if (LoginID == 20162068)
+            //{
                 var Users = await _informationProvider.GetAllUserList();
                 return Users;
-            }
-            else
-            {
-                return new List<InformationViewModel>();
-            }
-           
+            //}
+            //else
+            //{
+            //    return new List<InformationViewModel>();
+            //}
+
         }
 
         [HttpGet]
