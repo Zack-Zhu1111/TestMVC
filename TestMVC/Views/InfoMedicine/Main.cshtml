@@ -124,7 +124,7 @@
                                         <td class="td">@Html.DisplayFor(modelItem => item.category)</td>
                                         <td class="td">@Html.DisplayFor(modelItem => item.usage)</td>
                                         <td class="td">
-                                            <a href="@Url.Action("Edit","InfoMedicine",new { id = item.ID.Trim()})" class="btn btn-default" style="margin-left: 10px">Edit</a>
+                                            <a href="@Url.Action("Edit","InfoMedicine",new { id = item.ID })" class="btn btn-default" style="margin-left: 10px">Edit</a>
                                             <a href="javascript:void(0)" onclick="deleteInfoMedicine(@item.ID)" class="btn btn-default">Delete</a>
                                         </td>
                                     </tr>
